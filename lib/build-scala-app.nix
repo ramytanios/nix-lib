@@ -15,7 +15,7 @@ let
   # coursier deps
   coursier-cache-drv = stdenv.mkDerivation {
     inherit src;
-    pname = "coursier-cache";
+    name = "coursier-cache";
 
     buildInputs = build-packages;
 

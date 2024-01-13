@@ -29,7 +29,13 @@ let
       mkdir -p coursier-cache/v1
       mkdir -p coursier-cache/arc
       mkdir -p coursier-cache/jvm
-      scala-cli compile . --java-home=${jdk} --server=false
+      scala-cli --power \
+        compile . \
+        --java-home=${jdk} \
+        --server=false \
+        --power=true \
+        --build-info \
+        --project-version=${version}
     '';
 
     installPhase = ''
@@ -63,6 +69,8 @@ let
         --standalone \
         --java-home=${jdk} \
         --server=false \
+        --build-info \
+        --project-version=${version} \
         -o ${pname}
     '';
 

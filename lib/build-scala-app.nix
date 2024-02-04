@@ -1,5 +1,5 @@
 pkgs:
-{ pname, version, src, supported-platforms ? [ "jvm" "graal" ], sha256 }:
+{ pname, version, src, supported-platforms ? [ "jvm" "graal" ], sha256 ? ""}:
 with pkgs;
 let
 
@@ -7,7 +7,7 @@ let
   supports-graal = builtins.elem "graal" supported-platforms;
 
   native-packages =
-    [ clang coreutils llvmPackages.libcxxabi openssl s2n-tls which zlib ];
+    [ clang coreutils llvmPackages.libcxxabi openssl s2n-tls which zlib strip-nondeterminism];
   basic-packages = [ jdk scala-cli ];
   build-packages = basic-packages
     ++ (if supports-graal then native-packages else [ ]);
@@ -15,7 +15,7 @@ let
   # coursier deps
   coursier-cache-drv = stdenv.mkDerivation {
     inherit src;
-    name = "coursier-cache";
+    name = "${pname}-coursier-cache";
 
     buildInputs = build-packages;
 
@@ -36,6 +36,7 @@ let
         --power=true \
         --build-info \
         --project-version=${version}
+      find $COURSIER_CACHE -name '*.jar' -type f -print0 | xargs -r0 strip-nondeterminism
     '';
 
     installPhase = ''

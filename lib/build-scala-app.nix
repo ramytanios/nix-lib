@@ -1,5 +1,5 @@
 pkgs:
-{ pname, version, src, supported-platforms ? [ "jvm" "graal" ], sha256 ? ""}:
+{ pname, version, src, supported-platforms ? [ "jvm" "graal" ], sha256 ? "" }:
 with pkgs;
 let
 
@@ -7,8 +7,8 @@ let
   supports-graal = builtins.elem "graal" supported-platforms;
 
   native-packages =
-    [ clang coreutils llvmPackages.libcxxabi openssl s2n-tls which zlib strip-nondeterminism];
-  basic-packages = [ jdk scala-cli ];
+    [ clang coreutils llvmPackages.libcxxabi openssl s2n-tls which zlib ];
+  basic-packages = [ jdk scala-cli strip-nondeterminism ];
   build-packages = basic-packages
     ++ (if supports-graal then native-packages else [ ]);
 
